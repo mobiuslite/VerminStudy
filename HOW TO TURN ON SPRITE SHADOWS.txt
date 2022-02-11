@@ -1,0 +1,2 @@
+because I forgor and it took me an hour to figure out.
+Open the debug version of the inspector and turn on cast shadows on the sprite renderer
