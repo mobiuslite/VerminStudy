@@ -81,10 +81,12 @@ public class DayNightSystem : MonoBehaviour
 
             sunLight.intensity = Mathf.Lerp(sunLightIntensity, 0.0f, duskLerpTime);
             moonLight.intensity = Mathf.Lerp(0.0f, moonLightIntensity, duskLerpTime);
-
-            moonLight.enabled = true;
-            if (sunLight.intensity < 0.01f)
+        
+            if (sunLight.intensity < 0.95f)
+            {
+                moonLight.enabled = true;
                 sunLight.enabled = false;
+            }        
         }
     }
 

@@ -26,27 +26,17 @@ public class OldMovement : MonoBehaviour
     {
         Vector3 direction = Vector3.zero;
 
-        if (Input.GetKey(KeyCode.W))
-        {
-            direction += Vector3.forward;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            direction += Vector3.back;
-        }
+        direction.x = InputManager.Instance.GetHorizontal();
+        direction.z = InputManager.Instance.GetVertical();
 
-        if (Input.GetKey(KeyCode.A))
-        {
-            direction += Vector3.left;
-            isFlipped = true;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            direction += Vector3.right;
-            isFlipped = false;
-        }
+        isFlipped = direction.x < 0.0f;
 
         rb.MovePosition(rb.position + direction.normalized * movementAmount * Time.deltaTime);
         spriteRenderer.flipX = isFlipped;
+    }
+
+    public void TravelToSpot(Vector3 pos)
+    {
+        rb.MovePosition(pos);
     }
 }

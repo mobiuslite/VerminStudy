@@ -28,6 +28,15 @@ public class FastTravelSpot : MonoBehaviour
         FastTravelManager.Instance.AddFastTravelSpot(this);
     }
 
+    private void Update()
+    {
+        //If the player is next to a spot and interacts with it.
+        if(text.enabled == true && InputManager.Instance.GetInteract())
+        {
+            UIManager.Instance.ShowUI(UIType.FastTravel);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         text.enabled = true;
@@ -41,6 +50,11 @@ public class FastTravelSpot : MonoBehaviour
     public Vector3 GetSpawnPoint()
     {
         return spawnPoint.position;
+    }
+
+    public string GetSpotName()
+    {
+        return spotName;
     }
 
 }

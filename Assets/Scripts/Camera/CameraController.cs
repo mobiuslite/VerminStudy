@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void FixedUpdate()
     {
         desiredCameraPos = target.position + offset;
         smoothCameraPos = Vector3.Lerp(transform.position, desiredCameraPos, Time.deltaTime * smoothAmount);
