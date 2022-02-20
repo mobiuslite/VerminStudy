@@ -9,7 +9,7 @@ public class FastTravelManager : MonoBehaviour
     public List<FastTravelSpot> FastTravelSpots { get; private set; }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         FastTravelSpots = new List<FastTravelSpot>();
 
@@ -32,5 +32,12 @@ public class FastTravelManager : MonoBehaviour
         }
 
         FastTravelSpots.Add(spot);
+    }
+
+    public void TravelToSpot(string spotName)
+    {
+        FastTravelSpot spotToTravelTo = FastTravelSpots.Find((spot) => spot.GetSpotName() == spotName);
+
+        GameObject.FindGameObjectWithTag("Player").GetComponent<OldMovement>().TravelToSpot(spotToTravelTo.GetSpawnPoint());
     }
 }
