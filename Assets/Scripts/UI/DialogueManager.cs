@@ -4,7 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialogueManager : MonoBehaviour {
+public class DialogueManager : MonoBehaviour 
+{
 
 	//public Text nameText;
 	//public Text dialogueText;
@@ -16,7 +17,7 @@ public class DialogueManager : MonoBehaviour {
 	[SerializeField]
 	TextMeshProUGUI dialogueText;
 
-	public Animator animator;
+	//public Animator animator;
 
 	private Queue<string> sentences;
 
@@ -27,7 +28,10 @@ public class DialogueManager : MonoBehaviour {
 
 	public void StartDialogue (Dialogue dialogue)
 	{
-		animator.SetBool("IsOpen", true);
+		//animator.SetBool("IsOpen", true);
+
+		UIManager.Instance.ShowUI(UIType.Dialogue);
+		InputManager.Instance.AllowMoving(false);
 
 		nameText.text = dialogue.name;
 
@@ -66,7 +70,9 @@ public class DialogueManager : MonoBehaviour {
 
 	void EndDialogue()
 	{
-		animator.SetBool("IsOpen", false);
+		//animator.SetBool("IsOpen", false);
+		UIManager.Instance.HideUI();
+		InputManager.Instance.AllowMoving(true);
 	}
 
 }
