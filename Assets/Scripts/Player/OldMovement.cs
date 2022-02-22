@@ -8,11 +8,15 @@ public class OldMovement : MonoBehaviour
 {
     [SerializeField]
     float movementAmount;
+	[SerializeField]
+	float smoothingAmount;
 
     Rigidbody rb;
     SpriteRenderer spriteRenderer;
 
     bool isFlipped = false;
+
+    Vector3 velocity = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +35,15 @@ public class OldMovement : MonoBehaviour
 
         isFlipped = direction.x < 0.0f;
 
-        rb.MovePosition(rb.position + direction.normalized * movementAmount * Time.deltaTime);
+		Vector3 targetMovement = direction.normalized * movementAmount;
+
+        float veloXSmoothing = 0.0f;
+        float veloYSmoothing = 0.0f;
+
+		velocity.x = Mathf.SmoothDamp(velocity.x, targetMovement.x, ref veloXSmoothing, smoothingAmount);
+		velocity.z = Mathf.SmoothDamp(velocity.z, targetMovement.z, ref veloYSmoothing, smoothingAmount);
+
+        rb.MovePosition(rb.position + velocity * Time.deltaTime);
         spriteRenderer.flipX = isFlipped;
     }
 
