@@ -374,10 +374,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 406046040889700040, guid: 34fc4f575de50e64b80f8e0ade6325af,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 406046040889700046, guid: 34fc4f575de50e64b80f8e0ade6325af,
         type: 3}
       propertyPath: movementAmount
       value: 6.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 406046040889700046, guid: 34fc4f575de50e64b80f8e0ade6325af,
+        type: 3}
+      propertyPath: smoothingAmount
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 2582822214823294054, guid: 34fc4f575de50e64b80f8e0ade6325af,
         type: 3}
