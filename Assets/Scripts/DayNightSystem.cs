@@ -16,6 +16,11 @@ public class DayNightSystem : MonoBehaviour
     [SerializeField]
     float moonLightIntensity = 0.5f;
 
+    [SerializeField]
+    float dayEnvironmentLighting = 1.0f;
+    [SerializeField]
+    float nightEnvironmentLighting = 0.42f;
+
     [Space(10)]
     [SerializeField]
     float fullDayTime = 30.0f;
@@ -72,6 +77,8 @@ public class DayNightSystem : MonoBehaviour
             sunLight.enabled = true;
             if (moonLight.intensity < 0.01f)
                 moonLight.enabled = false;
+
+            RenderSettings.ambientIntensity = Mathf.Lerp(nightEnvironmentLighting, dayEnvironmentLighting, dawnLerpTime);
         }
 
         //Sun falling
@@ -86,7 +93,9 @@ public class DayNightSystem : MonoBehaviour
             {
                 moonLight.enabled = true;
                 sunLight.enabled = false;
-            }        
+            }
+
+            RenderSettings.ambientIntensity = Mathf.Lerp(dayEnvironmentLighting, nightEnvironmentLighting, duskLerpTime);
         }
     }
 
