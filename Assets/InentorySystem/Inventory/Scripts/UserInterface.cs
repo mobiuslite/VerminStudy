@@ -161,6 +161,9 @@ public abstract class UserInterface : MonoBehaviour
             basePrefab.GetComponent<GroundItem>().item = droppedItem;
 
             Vector3 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
+
+            basePrefab.GetComponentInChildren<SpriteRenderer>().sprite = MouseData.tempItemBeingDragged.GetComponent<Image>().sprite;
+
             GameObject newItem = Instantiate(basePrefab, playerPos + new Vector3(0.0f, 0.0f, 2.0f), Quaternion.identity);
 
             newItem.GetComponent<Rigidbody>().velocity = new Vector3(2.0f, 2.0f, 0.0f);
