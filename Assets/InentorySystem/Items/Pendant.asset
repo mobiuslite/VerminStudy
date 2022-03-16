@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiSprite: {fileID: 312618411, guid: aa9446c7da38be6409ed461bb3db5806, type: 3}
   stackable: 0
-  type: 5
+  type: 2
   description: A thing
   data:
     Name: 
-    ID: -1
+    ID: 6
     buffs: []
   attackBonus: 0
   defenceBonus: 0

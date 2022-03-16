@@ -19,6 +19,9 @@ public class CameraController : MonoBehaviour
     {
         desiredCameraPos = target.position + offset;
         smoothCameraPos = desiredCameraPos;
+
+        if (target == null)
+            target = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Update is called once per frame

@@ -10,7 +10,14 @@ public class Player : MonoBehaviour
     [SerializeField]
     InventoryObject equipment;
     [SerializeField]
-    AudioSource pickUpAudio;
+    AudioClip pickUpSound;
+
+    AudioSource playerAudio;
+
+    private void Awake()
+    {
+        playerAudio = GetComponent<AudioSource>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -51,7 +58,7 @@ public class Player : MonoBehaviour
                 if (inventory.AddItem(_item, 1))
                 {
                     Destroy(other.gameObject);
-                    pickUpAudio.Play();
+                    playerAudio.PlayOneShot(pickUpSound);
                 }
             }
         }

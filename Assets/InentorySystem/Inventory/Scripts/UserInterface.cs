@@ -137,6 +137,7 @@ public abstract class UserInterface : MonoBehaviour
             img.raycastTarget = false; //Let mouse ignore this so we can still register the drag
 
             MouseData.item = slotsOnInterface[obj].ItemObject;
+            MouseData.amount = slotsOnInterface[obj].mAmount;
         }
 
         MouseData.tempItemBeingDragged = mouseObject;
@@ -155,19 +156,23 @@ public abstract class UserInterface : MonoBehaviour
         {
             slotsOnInterface[obj].RemoveItem();
 
-            Debug.Log("Dropped item");
+           // Debug.Log("Dropped item");
 
-            GameObject basePrefab = GameObject.FindGameObjectWithTag("BaseItemPrefab");
-            basePrefab.GetComponent<GroundItem>().item = droppedItem;
+            for(int i = 0; i < MouseData.amount; i++)
+            {
+                GameObject basePrefab = GameObject.FindGameObjectWithTag("BaseItemPrefab");
+                basePrefab.name = droppedItem.data.Name;
+                basePrefab.GetComponent<GroundItem>().item = droppedItem;
 
-            Vector3 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
+                Vector3 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
 
-            basePrefab.GetComponentInChildren<SpriteRenderer>().sprite = MouseData.tempItemBeingDragged.GetComponent<Image>().sprite;
+                basePrefab.GetComponentInChildren<SpriteRenderer>().sprite = MouseData.tempItemBeingDragged.GetComponent<Image>().sprite;
 
-            GameObject newItem = Instantiate(basePrefab, playerPos + new Vector3(0.0f, 0.0f, 2.0f), Quaternion.identity);
+                GameObject newItem = Instantiate(basePrefab, playerPos + new Vector3(0.0f, 0.0f, -1.4f), Quaternion.identity);
 
-            newItem.GetComponent<Rigidbody>().velocity = new Vector3(2.0f, 2.0f, 0.0f);
-            newItem.tag = "Item";
+                newItem.GetComponent<Rigidbody>().velocity = new Vector3(Random.Range(-5.0f, 5.0f), 2.5f, -2.5f);
+                newItem.tag = "Item";
+            }
 
             return;
         }
@@ -196,4 +201,5 @@ public static class MouseData
     public static UserInterface uiMouseIsOver;
 
     public static ItemObject item;
+    public static int amount;
 }
