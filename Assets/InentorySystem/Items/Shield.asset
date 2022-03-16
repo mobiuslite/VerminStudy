@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a957c3e11f0b7b4da2a08fb50eb1757, type: 3}
+  m_Name: Shield
+  m_EditorClassIdentifier: 
+  uiSprite: {fileID: 1913481667, guid: aa9446c7da38be6409ed461bb3db5806, type: 3}
+  stackable: 0
+  type: 4
+  description: A basic shield that provides minor defense
+  data:
+    Name: 
+    ID: 5
+    buffs: []
+  attackBonus: 0
+  defenceBonus: 10
