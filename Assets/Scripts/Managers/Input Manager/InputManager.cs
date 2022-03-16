@@ -43,6 +43,16 @@ public class InputManager : MonoBehaviour
         return input.Player.Vertical.ReadValue<float>();
     }
 
+    public bool GetInventoryDown()
+    {
+        return input.Player.Inventory.WasPressedThisFrame();
+    }
+
+    public bool GetEquipmentDown()
+    {
+        return input.Player.Equipment.WasPressedThisFrame();
+    }
+
     private void OnEnable()
     {
         input.Enable();

@@ -4,7 +4,9 @@ using UnityEngine;
 public enum UIType
 {
     Dialogue,
-    FastTravel
+    FastTravel,
+    Inventory,
+    Equipment
 }
 public class UIManager : MonoBehaviour
 {
@@ -50,6 +52,25 @@ public class UIManager : MonoBehaviour
             {
                 ui.Show();
                 lastActiveUI = ui;
+            }
+        }
+    }
+
+    public void ToggleUI(UIType type)
+    {
+        foreach (UIChild ui in children)
+        {
+            if (ui.GetUIType() == type)
+            {
+                if (ui.UIActive)
+                {
+                    ui.Hide();
+                }
+                else
+                {
+                    ui.Show();
+                }       
+                //lastActiveUI = ui;
             }
         }
     }

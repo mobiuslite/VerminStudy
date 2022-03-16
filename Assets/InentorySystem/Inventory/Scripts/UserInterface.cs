@@ -135,24 +135,37 @@ public abstract class UserInterface : MonoBehaviour
             Image img = mouseObject.AddComponent<Image>();
             img.sprite = slotsOnInterface[obj].ItemObject.uiSprite;
             img.raycastTarget = false; //Let mouse ignore this so we can still register the drag
+
+            MouseData.item = slotsOnInterface[obj].ItemObject;
         }
 
         MouseData.tempItemBeingDragged = mouseObject;
+        
     }
 
-                //Check that the item can be dropped in this slot && slot is empty || there is an item there but this slot can hold that type of item
-            //if(mouseHoverItem.CanPlaceInSlot(GetItemObject[slotsOnInterface[obj].mID]) && 
-            //    (mouseHoverItem.mItem.ID <= -1 || (mouseHoverItem.mItem.ID >= 0 && slotsOnInterface[obj].CanPlaceInSlot(GetItemObject[mouseHoverItem.mItem.ID]))))
     public void OnDragEnd(GameObject obj)
     {
         //Clear the image so it isnt just left on the screen
+        ItemObject droppedItem = MouseData.item;
+
         Destroy(MouseData.tempItemBeingDragged);
 
         //Mouse is not over a ui so remove it
         if(MouseData.uiMouseIsOver == null)
         {
             slotsOnInterface[obj].RemoveItem();
-            //TODO: Drop item on the ground
+
+            Debug.Log("Dropped item");
+
+            GameObject basePrefab = GameObject.FindGameObjectWithTag("BaseItemPrefab");
+            basePrefab.GetComponent<GroundItem>().item = droppedItem;
+
+            Vector3 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
+            GameObject newItem = Instantiate(basePrefab, playerPos + new Vector3(0.0f, 0.0f, 2.0f), Quaternion.identity);
+
+            newItem.GetComponent<Rigidbody>().velocity = new Vector3(2.0f, 2.0f, 0.0f);
+            newItem.tag = "Item";
+
             return;
         }
 
@@ -162,8 +175,6 @@ public abstract class UserInterface : MonoBehaviour
             InventorySlot slotMouseIsOver = MouseData.uiMouseIsOver.slotsOnInterface[MouseData.slotMouseIsOver];
             inventory.SwapItems(slotsOnInterface[obj], slotMouseIsOver);
         }
-        
-
     }
 
     public void OnDrag(GameObject obj)
@@ -180,4 +191,6 @@ public static class MouseData
     public static GameObject tempItemBeingDragged;
     public static GameObject slotMouseIsOver;
     public static UserInterface uiMouseIsOver;
+
+    public static ItemObject item;
 }
