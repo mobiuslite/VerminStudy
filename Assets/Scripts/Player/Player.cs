@@ -12,11 +12,13 @@ public class Player : MonoBehaviour
     [SerializeField]
     AudioSource pickUpAudio;
 
-    private GameObject panel; 
+    private GameObject inventoryPanel; 
+    private GameObject equipmentPanel; 
     // Start is called before the first frame update
     void Start()
     {
-        panel = GameObject.Find("Inventory Screen");
+        inventoryPanel = GameObject.Find("Inventory Screen");
+        equipmentPanel = GameObject.Find("Equipment Screen");
     }
 
     // Update is called once per frame
@@ -37,7 +39,8 @@ public class Player : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.I))
         {
-            panel.gameObject.SetActive(!panel.gameObject.activeSelf);
+            inventoryPanel.gameObject.SetActive(!inventoryPanel.gameObject.activeSelf);
+            equipmentPanel.gameObject.SetActive(!equipmentPanel.gameObject.activeSelf);
         }
     }
 
