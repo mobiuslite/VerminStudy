@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(BattleMessenger))]
 public class Player : MonoBehaviour
 {
     [SerializeField]
@@ -14,9 +15,12 @@ public class Player : MonoBehaviour
 
     AudioSource playerAudio;
 
+    BattleMessenger messenger;
+
     private void Awake()
     {
         playerAudio = GetComponent<AudioSource>();
+        messenger = GetComponent<BattleMessenger>();
     }
 
     // Update is called once per frame
@@ -62,6 +66,22 @@ public class Player : MonoBehaviour
                 }
             }
         }
+    }
+    public void StartBattle()
+    {
+        List<IBattleMessenger> allies = new List<IBattleMessenger>();
+        allies.Add(messenger);
+        BattleMediator.Instance.SetAllies(allies);
+    }
+
+    public void DamageEnemy()
+    {
+        BattleMessage msg = new BattleMessage("enemy_take_damage");
+        msg.data.Add("enemy_index", 0);
+        msg.data.Add("damage", messenger.stats.GetDamageAmount());
+
+
+        BattleMediator.Instance.ReceiveMessage(msg);
     }
 
     private void OnApplicationQuit()
