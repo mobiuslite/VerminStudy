@@ -99,6 +99,8 @@ GameObject:
   - component: {fileID: 1147790686531949527}
   - component: {fileID: 742906151247691118}
   - component: {fileID: 742906151247691025}
+  - component: {fileID: 2523631629841362642}
+  - component: {fileID: 4714088486805892265}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player
@@ -329,6 +331,33 @@ MonoBehaviour:
   inventory: {fileID: 11400000, guid: 11cf6cf72a443674b82ced54f0582094, type: 2}
   equipment: {fileID: 11400000, guid: 152546f3f3d10524d8640ee4e6bed37e, type: 2}
   pickUpSound: {fileID: 8300000, guid: 9ad69f5530a1d1946a9547e4c682a46c, type: 3}
+--- !u!114 &2523631629841362642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2996954425535596927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93a3e0e9fa577774c9bf0c82d2cb7b7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  damage: 25
+--- !u!114 &4714088486805892265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2996954425535596927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee981595769d53246a88e7f7a9a53ebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 2523631629841362642}
 --- !u!1 &7122517890543876688
 GameObject:
   m_ObjectHideFlags: 0
