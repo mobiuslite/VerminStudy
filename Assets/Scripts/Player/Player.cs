@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(BattleMessenger))]
-public class Player : MonoBehaviour
+public class Player : BattleMessenger
 {
     [SerializeField]
     InventoryObject inventory;
@@ -15,12 +14,13 @@ public class Player : MonoBehaviour
 
     AudioSource playerAudio;
 
-    BattleMessenger messenger;
+    Health healthBar;
 
     private void Awake()
     {
         playerAudio = GetComponent<AudioSource>();
-        messenger = GetComponent<BattleMessenger>();
+        healthBar = GetComponentInChildren<Health>();
+        healthBar.HideHealth();
     }
 
     // Update is called once per frame
@@ -70,15 +70,17 @@ public class Player : MonoBehaviour
     public void StartBattle()
     {
         List<IBattleMessenger> allies = new List<IBattleMessenger>();
-        allies.Add(messenger);
+        allies.Add(this);
         BattleMediator.Instance.SetAllies(allies);
+
+        healthBar.ShowHealth();
     }
 
     public void DamageEnemy()
     {
         BattleMessage msg = new BattleMessage("enemy_take_damage");
         msg.data.Add("enemy_index", 0);
-        msg.data.Add("damage", messenger.stats.GetDamageAmount());
+        msg.data.Add("damage", this.stats.GetDamageAmount());
 
 
         BattleMediator.Instance.ReceiveMessage(msg);
@@ -88,5 +90,35 @@ public class Player : MonoBehaviour
     {
         inventory.inventory.Clear();
         equipment.inventory.Clear();
+    }
+
+    public override void ReceiveMessage(BattleMessage message)
+    {
+        switch (message.type)
+        {
+            case "take_damage":
+                {
+
+                    float damage = message.data["damage"];
+                    stats.TakeDamage(damage);
+                    Debug.Log(gameObject.name + $" took {damage} damage!");
+
+                    if (stats.GetHealth() <= 0.0f)
+                    {
+                        Debug.Log("Game over");
+                        BattleMediator.Instance.EndBattle();
+                        //Destroy(gameObject);
+                    }
+
+                    break;
+                }
+            case "end_battle":
+                {
+                    healthBar.HideHealth();
+                    break;
+                }
+        }
+
+        healthBar.SetHealthScale(stats.GetHealth() / stats.GetMaxHealth());
     }
 }
