@@ -2,15 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BattleMessenger))]
-public class Enemy : MonoBehaviour
+public class Enemy : BattleMessenger
 {
-    BattleMessenger messenger;
+    Health healthBar;
+
+    public override void ReceiveMessage(BattleMessage message)
+    {
+        base.ReceiveMessage(message);
+
+        switch (message.type)
+        {
+            case "request_action":
+                {
+                    BattleMessage msg = new BattleMessage("allies_take_damage");
+                    msg.data.Add("damage", stats.GetDamageAmount());
+                    msg.data.Add("party_index", Random.Range(0, (int)message.data["num_party"]));
+
+                    BattleMediator.Instance.ReceiveMessage(msg);
+
+                    break;
+                }
+            case "end_battle":
+                {
+                    healthBar.HideHealth();
+                    break;
+                }
+        }
+
+        healthBar.SetHealthScale(stats.GetHealth() / stats.GetMaxHealth());
+    }
 
     private void Awake()
     {
-        if(messenger == null)
-            messenger = GetComponent<BattleMessenger>();
+        healthBar = GetComponentInChildren<Health>();
+        healthBar.HideHealth();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -21,11 +46,13 @@ public class Enemy : MonoBehaviour
             Debug.Log("Start combat");
 
             List<IBattleMessenger> enemies = new List<IBattleMessenger>();
-            enemies.Add(messenger);
+            enemies.Add(this);
             BattleMediator.Instance.SetEnemies(enemies);
 
             BattleMediator.Instance.RequestAllies();
             BattleMediator.Instance.StartBattle();
+
+            healthBar.ShowHealth();
         }
     }
 }

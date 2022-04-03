@@ -12,6 +12,8 @@ public class BattleMessage
 
     public string type;
     public Dictionary<string, float> data;
+
+    public IBattleMessenger who = null;
 }
 
 public enum BattleState
@@ -71,12 +73,24 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
             switch (state)
             {
                 case BattleState.Start:
+                    state = BattleState.PlayerTurn;
                     break;
                 case BattleState.End:
                     break;
                 case BattleState.PlayerTurn:
                     break;
                 case BattleState.EnemyTurn:
+                    {
+                        foreach(IBattleMessenger messenger in this.enemies)
+                        {
+                            BattleMessage msg = new BattleMessage("request_action");
+                            msg.data.Add("num_party", (float)this.allies.Count);
+
+                            messenger.ReceiveMessage(msg);
+                        }
+
+                        this.state = BattleState.PlayerTurn;
+                    }
                     break;
             }
         }
@@ -119,6 +133,20 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
         inBattle = false;
 
         UIManager.Instance.HideUI();
+
+        foreach (IBattleMessenger messenger in this.enemies)
+        {
+            BattleMessage msg = new BattleMessage("end_battle");
+            messenger.ReceiveMessage(msg);
+        }
+
+        foreach (IBattleMessenger messenger in this.allies)
+        {
+            BattleMessage msg = new BattleMessage("end_battle");
+            messenger.ReceiveMessage(msg);
+        }
+
+        this.state = BattleState.End;
     }
 
     public void RequestAllies()
@@ -131,11 +159,42 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
         switch (message.type)
         {
             case "enemy_take_damage":
+                {
+                    if (this.state == BattleState.PlayerTurn)
+                    {
+                        BattleMessage msg = new BattleMessage("take_damage");
+                        msg.data.Add("damage", message.data["damage"]);
 
-                BattleMessage msg = new BattleMessage("take_damage");
-                msg.data.Add("damage", message.data["damage"]);
+                        this.enemies[(int)message.data["enemy_index"]].ReceiveMessage(msg);
 
-                this.enemies[(int)message.data["enemy_index"]].ReceiveMessage(msg);
+                        this.state = BattleState.EnemyTurn;
+                    }
+                    break;
+                }
+            case "allies_take_damage":
+                {
+                    if (this.state == BattleState.EnemyTurn)
+                    {
+                        BattleMessage msg = new BattleMessage("take_damage");
+                        msg.data.Add("damage", message.data["damage"]);
+
+                        this.allies[(int)message.data["party_index"]].ReceiveMessage(msg);
+                    }
+                    break;
+                }
+            case "dead":
+                {
+                    this.allies.Remove(message.who);
+                    this.enemies.Remove(message.who);
+
+                    if(allies.Count == 0 || enemies.Count == 0)
+                    {
+                        this.EndBattle();
+                    }
+                    break;
+                }
+            default:
+                Debug.LogError("Wrong message type sent");
                 break;
         }
     }

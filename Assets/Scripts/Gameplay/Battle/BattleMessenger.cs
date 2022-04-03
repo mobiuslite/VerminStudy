@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BattleStats))]
-public class BattleMessenger : MonoBehaviour, IBattleMessenger
+public abstract class BattleMessenger : MonoBehaviour, IBattleMessenger
 {
     public BattleStats stats;
 
@@ -12,7 +12,7 @@ public class BattleMessenger : MonoBehaviour, IBattleMessenger
         stats = GetComponent<BattleStats>();
     }
 
-    public void ReceiveMessage(BattleMessage message)
+    public virtual void ReceiveMessage(BattleMessage message)
     {
         switch (message.type)
         {
@@ -24,8 +24,13 @@ public class BattleMessenger : MonoBehaviour, IBattleMessenger
 
                 if (stats.GetHealth() <= 0.0f)
                 {
-                    Debug.Log("Battle over");
-                    BattleMediator.Instance.EndBattle();
+                    Debug.Log($"{gameObject.name} is dead");
+
+                    BattleMessage msg = new BattleMessage("dead");
+                    msg.who = this;
+                    
+                    BattleMediator.Instance.ReceiveMessage(msg);
+                    //BattleMediator.Instance.EndBattle();
                     Destroy(gameObject);
                 }
 
