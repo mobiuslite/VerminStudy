@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class BattleMessage
 {
@@ -49,6 +50,9 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
     float waitTime = 2.0f;
     float elaspedWaitTime;
 
+    [SerializeField]
+    AudioMixer masterMixer;
+
     private void Awake()
     {
         if (Instance == null)
@@ -68,7 +72,9 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
 
     private void Update()
     {
-        if (inBattle == true)
+        if(elaspedWaitTime < waitTime)
+            elaspedWaitTime += Time.deltaTime;
+        else if (inBattle == true && elaspedWaitTime >= waitTime)
         {
             switch (state)
             {
@@ -92,7 +98,7 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
                         this.state = BattleState.PlayerTurn;
                     }
                     break;
-            }
+            }         
         }
     }
 
@@ -116,12 +122,16 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
         {
             Debug.Log("You have not set enemies or allies!");
         }
+        //Start battle!!
         else if (!inBattle)
         {
             inBattle = true;
             state = BattleState.Start;
 
             UIManager.Instance.ShowUI(UIType.Battle);
+
+            masterMixer.SetFloat("BattleVolume", 0.0f);
+            masterMixer.SetFloat("EnvVolume", -80.0f);
         }
     }
 
@@ -147,6 +157,9 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
         }
 
         this.state = BattleState.End;
+
+        masterMixer.SetFloat("BattleVolume", -80.0f);
+        masterMixer.SetFloat("EnvVolume", 0.0f);
     }
 
     public void RequestAllies()
@@ -168,6 +181,7 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
                         this.enemies[(int)message.data["enemy_index"]].ReceiveMessage(msg);
 
                         this.state = BattleState.EnemyTurn;
+                        elaspedWaitTime = 0.0f;
                     }
                     break;
                 }
@@ -179,6 +193,8 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
                         msg.data.Add("damage", message.data["damage"]);
 
                         this.allies[(int)message.data["party_index"]].ReceiveMessage(msg);
+
+                        elaspedWaitTime = 0.0f;
                     }
                     break;
                 }
