@@ -5,6 +5,9 @@ using UnityEngine;
 public class Enemy : BattleMessenger
 {
     Health healthBar;
+    [SerializeField]
+    ItemObject[] heldItems;
+
 
     [SerializeField]
     ItemObject[] possibleDrops;
@@ -28,6 +31,7 @@ public class Enemy : BattleMessenger
             case "end_battle":
                 {
                     healthBar.HideHealth();
+                    Debug.Log("BP");
                     break;
                 }
         }

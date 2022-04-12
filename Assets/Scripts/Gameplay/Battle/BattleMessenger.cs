@@ -31,6 +31,7 @@ public abstract class BattleMessenger : MonoBehaviour, IBattleMessenger
                     
                     BattleMediator.Instance.ReceiveMessage(msg);
                     //BattleMediator.Instance.EndBattle();
+
                     OnDeath();
                     Destroy(gameObject);
                 }
