@@ -12,9 +12,18 @@ public enum UIType
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
+    public static bool GameIsPaused = false;
+
+
+    [SerializeField]
+    GameObject pauseMenuUI;
+
+    [SerializeField]
+    GameObject optionsMenuUI;
 
     List<UIChild> children;
     UIChild lastActiveUI;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -41,6 +50,48 @@ public class UIManager : MonoBehaviour
         }
 
         HideAllUI();
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(GameIsPaused)
+            {
+                Resume();
+            }
+            else
+            {
+                Pause();
+            }
+        }
+    }
+
+    public void Resume()
+    {
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+        GameIsPaused = false;
+
+    }
+
+    public void Pause()
+    {
+        pauseMenuUI.SetActive(true);
+        Time.timeScale = 0f;
+        GameIsPaused = true;
+    }
+
+    public void OptionsMenu()
+    {
+        optionsMenuUI.SetActive(true);
+        pauseMenuUI.SetActive(false);
+
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     public void ShowUI(UIType type)

@@ -31,6 +31,11 @@ public abstract class BattleMessenger : MonoBehaviour, IBattleMessenger
                     
                     BattleMediator.Instance.ReceiveMessage(msg);
                     //BattleMediator.Instance.EndBattle();
+                    if(gameObject.CompareTag("Enemy"))
+                    {
+                        Enemy enemy = gameObject.GetComponent<Enemy>();
+                        enemy.DropItems();
+                    }
                     Destroy(gameObject);
                 }
 

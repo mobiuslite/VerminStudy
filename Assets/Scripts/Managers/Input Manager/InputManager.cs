@@ -18,7 +18,7 @@ public class InputManager : MonoBehaviour
 
         input = new PlayerInput();
 
-        input.Player.Quit.performed += _ => Application.Quit(0);
+        //input.Player.Quit.performed += _ => Application.Quit(0);
     }
 
     public bool GetInteract()

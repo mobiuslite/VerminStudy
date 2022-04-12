@@ -86,6 +86,10 @@ AudioMixerController:
     name: BattleVolume
   - guid: 21d75509a7d354d4d9107f716b72542d
     name: EnvVolume
+  - guid: 7767af4895b607a41bb16d996c0fc790
+    name: MasterVolume
+  - guid: 7a4ac42fe0ea4d641967f3c937cf83ed
+    name: MusicVolume
   m_AudioMixerGroupViews:
   - guids:
     - 8f39665bd12701a4391948dc8c9edfb1
