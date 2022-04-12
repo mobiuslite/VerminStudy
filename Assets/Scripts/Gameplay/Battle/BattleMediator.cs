@@ -74,7 +74,7 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
     {
         if(elaspedWaitTime < waitTime)
             elaspedWaitTime += Time.deltaTime;
-        else if (inBattle == true && elaspedWaitTime >= waitTime)
+        else if (inBattle && elaspedWaitTime >= waitTime)
         {
             switch (state)
             {
@@ -104,16 +104,22 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
 
     public void SetAllies(List<IBattleMessenger> allies)
     {
-        alliesSet = true;
+        if (!this.inBattle)
+        {
+            alliesSet = true;
 
-        this.allies = allies;
+            this.allies = allies;
+        }
     }
 
     public void SetEnemies(List<IBattleMessenger> enemies)
     {
-        enemiesSet = true;
+        if (!this.inBattle)
+        {
+            enemiesSet = true;
 
-        this.enemies = enemies;
+            this.enemies = enemies;
+        }
     }
 
     public void StartBattle()
@@ -164,54 +170,60 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
 
     public void RequestAllies()
     {
-        player.StartBattle();
+        if (!this.inBattle)
+        {
+            player.StartBattle();
+        }
     }
 
     public void ReceiveMessage(BattleMessage message)
     {
-        switch (message.type)
+        if (this.inBattle)
         {
-            case "enemy_take_damage":
-                {
-                    if (this.state == BattleState.PlayerTurn)
+            switch (message.type)
+            {
+                case "enemy_take_damage":
                     {
-                        BattleMessage msg = new BattleMessage("take_damage");
-                        msg.data.Add("damage", message.data["damage"]);
+                        if (this.state == BattleState.PlayerTurn)
+                        {
+                            BattleMessage msg = new BattleMessage("take_damage");
+                            msg.data.Add("damage", message.data["damage"]);
 
-                        this.enemies[(int)message.data["enemy_index"]].ReceiveMessage(msg);
+                            this.enemies[(int)message.data["enemy_index"]].ReceiveMessage(msg);
 
-                        this.state = BattleState.EnemyTurn;
-                        elaspedWaitTime = 0.0f;
+                            this.state = BattleState.EnemyTurn;
+                            elaspedWaitTime = 0.0f;
+                        }
+                        break;
                     }
-                    break;
-                }
-            case "allies_take_damage":
-                {
-                    if (this.state == BattleState.EnemyTurn)
+                case "allies_take_damage":
                     {
-                        BattleMessage msg = new BattleMessage("take_damage");
-                        msg.data.Add("damage", message.data["damage"]);
+                        if (this.state == BattleState.EnemyTurn)
+                        {
+                            BattleMessage msg = new BattleMessage("take_damage");
+                            msg.data.Add("damage", message.data["damage"]);
 
-                        this.allies[(int)message.data["party_index"]].ReceiveMessage(msg);
+                            this.allies[(int)message.data["party_index"]].ReceiveMessage(msg);
 
-                        elaspedWaitTime = 0.0f;
+                            elaspedWaitTime = 0.0f;
+                        }
+                        break;
                     }
-                    break;
-                }
-            case "dead":
-                {
-                    this.allies.Remove(message.who);
-                    this.enemies.Remove(message.who);
-
-                    if(allies.Count == 0 || enemies.Count == 0)
+                case "dead":
                     {
-                        this.EndBattle();
+                        this.allies.Remove(message.who);
+                        this.enemies.Remove(message.who);
+
+                        if (allies.Count == 0 || enemies.Count == 0)
+                        {
+                            this.EndBattle();
+                        }
+                        break;
                     }
+                default:
+                    Debug.LogError("Wrong message type sent");
                     break;
-                }
-            default:
-                Debug.LogError("Wrong message type sent");
-                break;
+            }
         }
     }
 }

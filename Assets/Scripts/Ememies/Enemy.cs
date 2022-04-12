@@ -6,6 +6,9 @@ public class Enemy : BattleMessenger
 {
     Health healthBar;
 
+    [SerializeField]
+    ItemObject[] possibleDrops;
+
     public override void ReceiveMessage(BattleMessage message)
     {
         base.ReceiveMessage(message);
@@ -53,6 +56,17 @@ public class Enemy : BattleMessenger
             BattleMediator.Instance.StartBattle();
 
             healthBar.ShowHealth();
+        }
+    }
+
+    public override void OnDeath()
+    {
+        if (possibleDrops.Length > 0)
+        {
+            int maxIndex = possibleDrops.Length;
+            int itemIndex = Random.Range(0, maxIndex);
+
+            ItemInstantiate.Instantiate(possibleDrops[itemIndex], transform.position);
         }
     }
 }

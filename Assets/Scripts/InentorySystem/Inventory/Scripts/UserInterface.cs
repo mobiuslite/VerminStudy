@@ -103,6 +103,7 @@ public abstract class UserInterface : MonoBehaviour
     public void OnEnter(GameObject obj)
     {
         MouseData.slotMouseIsOver = obj;
+        Debug.Log(obj.name);
     }
 
     public void OnExit(GameObject obj)
@@ -150,30 +151,19 @@ public abstract class UserInterface : MonoBehaviour
         ItemObject droppedItem = MouseData.item;
 
         Destroy(MouseData.tempItemBeingDragged);
+        MouseData.tempItemBeingDragged = null;
+
+        slotsOnInterface[obj].mAmount = MouseData.amount;
 
         //Mouse is not over a ui so remove it
-        if(MouseData.uiMouseIsOver == null)
+        if (MouseData.uiMouseIsOver == null)
         {
-            slotsOnInterface[obj].RemoveItem();
-
-           // Debug.Log("Dropped item");
-
+            slotsOnInterface[obj].RemoveItem(); 
             for(int i = 0; i < MouseData.amount; i++)
             {
-                GameObject basePrefab = GameObject.FindGameObjectWithTag("BaseItemPrefab");
-                basePrefab.name = droppedItem.data.Name;
-                basePrefab.GetComponent<GroundItem>().item = droppedItem;
-
                 Vector3 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
-
-                basePrefab.GetComponentInChildren<SpriteRenderer>().sprite = MouseData.tempItemBeingDragged.GetComponent<Image>().sprite;
-
-                GameObject newItem = Instantiate(basePrefab, playerPos + new Vector3(0.0f, 0.0f, -1.4f), Quaternion.identity);
-
-                newItem.GetComponent<Rigidbody>().velocity = new Vector3(Random.Range(-5.0f, 5.0f), 2.5f, -2.5f);
-                newItem.tag = "Item";
+                ItemInstantiate.Instantiate(droppedItem, playerPos);
             }
-
             return;
         }
 
