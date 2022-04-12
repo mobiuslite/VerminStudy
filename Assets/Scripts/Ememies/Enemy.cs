@@ -9,6 +9,9 @@ public class Enemy : BattleMessenger
     ItemObject[] heldItems;
 
 
+    [SerializeField]
+    ItemObject[] possibleDrops;
+
     public override void ReceiveMessage(BattleMessage message)
     {
         base.ReceiveMessage(message);
@@ -60,26 +63,14 @@ public class Enemy : BattleMessenger
         }
     }
 
-    public void DropItems()
+    public override void OnDeath()
     {
-        Debug.Log("Dropped item");
-
-        for (int i = 0; i < heldItems.Length; i++)
+        if (possibleDrops.Length > 0)
         {
-            ItemObject curItem = heldItems[i];
+            int maxIndex = possibleDrops.Length;
+            int itemIndex = Random.Range(0, maxIndex);
 
-            GameObject basePrefab = GameObject.FindGameObjectWithTag("BaseItemPrefab");
-            basePrefab.name = curItem.data.Name;
-            basePrefab.GetComponent<GroundItem>().item = curItem;
-
-            Vector3 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
-
-            basePrefab.GetComponentInChildren<SpriteRenderer>().sprite = curItem.uiSprite;
-
-            GameObject newItem = Instantiate(basePrefab, playerPos + new Vector3(0.0f, 0.0f, -1.4f), Quaternion.identity);
-
-            newItem.GetComponent<Rigidbody>().velocity = new Vector3(Random.Range(-2.0f, 2.0f), 2.5f, -0.5f);
-            newItem.tag = "Item";
+            ItemInstantiate.Instantiate(possibleDrops[itemIndex], transform.position);
         }
     }
 }

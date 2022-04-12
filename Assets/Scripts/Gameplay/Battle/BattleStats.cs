@@ -17,6 +17,15 @@ public class BattleStats : MonoBehaviour
         health -= damage;
     }
 
+    public void Heal(float health)
+    {
+        this.health += health;
+        if(this.health > maxHealth)
+        {
+            this.health = maxHealth;
+        }
+    }
+
     public float GetDamageAmount()
     {
         return damage;

@@ -1220,7 +1220,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 226026355}
-  heldItems:
+  possibleDrops:
+  - {fileID: 11400000, guid: 845c09e2df0f9d54f83015cd298319c5, type: 2}
+  - {fileID: 11400000, guid: 318ed90f7e52c3e4890ece2f65b33f1c, type: 2}
   - {fileID: 11400000, guid: 8ceb8aeef38faa14b94bc13bebfa41a3, type: 2}
 --- !u!114 &226026355
 MonoBehaviour:

@@ -5,8 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Potion Object", menuName = "Inventory System/Items/Potion")]
 public class PotionObject : ItemObject
 {
-    [SerializeField]
-    int healthRestoreValue;
+    public int healthRestoreValue;
     public void Awake()
     {
         type = ItemType.Consumable;

@@ -127,6 +127,19 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public bool? CheckUIActive(UIType type)
+    {
+        foreach (UIChild ui in children)
+        {
+            if (ui.GetUIType() == type)
+            {
+                return ui.UIActive;
+            }
+        }
+
+        return null;
+    }
+
     public void HideUI()
     {
         if(lastActiveUI != null)
