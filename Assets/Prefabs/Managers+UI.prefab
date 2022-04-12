@@ -38,7 +38,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 150, y: 100}
+  m_AnchoredPosition: {x: 150, y: 27}
   m_SizeDelta: {x: 179.70001, y: 47.899994}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &5932308427461087702
@@ -316,7 +316,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
-  waitTime: 2
+  waitTime: 1.1
   masterMixer: {fileID: 24100000, guid: b88309a583b3d4145a98e3a0613210db, type: 2}
 --- !u!1 &1272295923517159383
 GameObject:
@@ -2265,7 +2265,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -77}
   m_SizeDelta: {x: 0, y: 254.25}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &2370276626081899727
@@ -2417,7 +2417,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 24}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1201052053756089421
