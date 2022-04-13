@@ -24,6 +24,8 @@ public class MinigameManager : MonoBehaviour
     float spawnTime = 0.6f;
     float elapsedSpawnTime = 0.0f;
     float actualSpawnTime;
+    float axeSpinTime;
+    float elapsedAxeSpinTime = 0.0f;
 
     float gameTime = 6.0f;
     float elapsedGameTime = 0.0f;
@@ -63,6 +65,7 @@ public class MinigameManager : MonoBehaviour
         currentState = MinigameState.inProgress;
 
         actualSpawnTime = spawnTime * Random.Range(0.4f, 1.2f);
+        axeSpinTime = 0.4f;
     }
 
     void EndMinigame()
@@ -91,6 +94,7 @@ public class MinigameManager : MonoBehaviour
 
                 elapsedGameTime += Time.deltaTime;
                 elapsedSpawnTime += Time.deltaTime;
+                elapsedAxeSpinTime += Time.deltaTime;
 
                 if(elapsedSpawnTime >= actualSpawnTime)
                 {
@@ -101,6 +105,17 @@ public class MinigameManager : MonoBehaviour
                     projectiles.Add(proj);
 
                     elapsedSpawnTime = 0.0f;
+                }
+
+                if (elapsedAxeSpinTime >= axeSpinTime)
+                {
+                    foreach(GameObject proj in projectiles)
+                    {
+                        Vector3 rotation = proj.transform.rotation.eulerAngles;
+                        rotation.z += Mathf.Deg2Rad * 20.0f;
+                        proj.transform.rotation = Quaternion.Euler(rotation);
+                    }
+                    elapsedAxeSpinTime = 0.0f;
                 }
 
                 if(elapsedGameTime >= gameTime)
