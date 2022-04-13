@@ -23,6 +23,7 @@ public enum BattleState
     End,
     PlayerTurn,
     EnemyTurn,
+    EnemyAttacking
 }
 
 public interface IBattleMessenger
@@ -35,8 +36,6 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
     public static BattleMediator Instance { private set; get; }
 
     public BattleState state;
-
-    private MinigameManager minigameManager;
 
     List<IBattleMessenger> allies;
     List<IBattleMessenger> enemies;
@@ -61,8 +60,6 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
             Instance = this;
         else
             Destroy(this);
-
-        minigameManager = GameObject.FindGameObjectWithTag("minigameManager").GetComponent<MinigameManager>();
 
         alliesSet = false;
         enemiesSet = false;
@@ -90,17 +87,8 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
                 case BattleState.PlayerTurn:
                     break;
                 case BattleState.EnemyTurn:
-                    {
-                        //foreach(IBattleMessenger messenger in this.enemies)
-                        //{
-                        //    BattleMessage msg = new BattleMessage("request_action");
-                        //    msg.data.Add("num_party", (float)this.allies.Count);
-
-                        //    messenger.ReceiveMessage(msg);
-                        //}
-
-                        this.state = BattleState.PlayerTurn;
-                    }
+                    MinigameManager.Instance.StartMinigame();
+                    state = BattleState.EnemyAttacking;
                     break;
             }         
         }
@@ -202,7 +190,7 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
                     }
                 case "allies_take_damage":
                     {
-                        if (this.state == BattleState.EnemyTurn)
+                        if (this.state == BattleState.EnemyAttacking)
                         {
                             BattleMessage msg = new BattleMessage("take_damage");
                             msg.data.Add("damage", message.data["damage"]);
@@ -224,6 +212,9 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
                         }
                         break;
                     }
+                case "enemy_done_attacking":
+                    state = BattleState.PlayerTurn;
+                    break;
                 default:
                     Debug.LogError("Wrong message type sent");
                     break;

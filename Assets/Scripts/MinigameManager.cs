@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class MinigameManager : MonoBehaviour
 {
+    public static MinigameManager Instance { get; private set; }
 
-    float timer = 0.0f;
+    Camera minigameCamera;
 
     List<GameObject> projectiles = new List<GameObject>();
     GameObject playerObject = null;
@@ -16,36 +17,67 @@ public class MinigameManager : MonoBehaviour
     [SerializeField]
     GameObject PlayerSpritePrefab;
 
-    [SerializeField]
-    Transform spawnPosition;
+    enum MinigameState { inProgress, idle }
 
-    UIChild UiBackground = null;
+    private MinigameState currentState;
 
-    enum minigameState { start, end, inProgress, idle }
+    float spawnTime = 0.6f;
+    float elapsedSpawnTime = 0.0f;
+    float actualSpawnTime;
 
-    private minigameState currentState;
+    float gameTime = 6.0f;
+    float elapsedGameTime = 0.0f;
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+
         if(playerObject == null)
         {
-            playerObject = Instantiate(PlayerSpritePrefab, spawnPosition);
+            playerObject = Instantiate(PlayerSpritePrefab, transform.position, Quaternion.identity);
+            playerObject.SetActive(false);
         }
 
-        UiBackground = GameObject.Find("MinigameBackground").GetComponent<UIChild>();
+        currentState = MinigameState.idle;
 
-        currentState = minigameState.idle;
+        minigameCamera = GameObject.FindGameObjectWithTag("MinigameCamera").GetComponent<Camera>();
+        minigameCamera.enabled = false;
     }
         
-    public void startMinigame()
+    public void StartMinigame()
     {
-        timer = 10.0f;
-        currentState = minigameState.inProgress;
-        for (int i = 0; i < 6; i++) {
-            projectiles.Add(Instantiate(projectileSpritePrefabs[0], spawnPosition));
-            projectiles[i].transform.position += new Vector3(0.0f, 10.0f, 0.0f);
-        }
+        playerObject.SetActive(true);
+        playerObject.GetComponent<MiniPlayerScript>().AllowMovement(true);
+        minigameCamera.enabled = true;
+
+        InputManager.Instance.AllowMoving(false);
+
+        currentState = MinigameState.inProgress;
+
+        actualSpawnTime = spawnTime * Random.Range(0.4f, 1.2f);
+    }
+
+    void EndMinigame()
+    {       
+        playerObject.GetComponent<MiniPlayerScript>().AllowMovement(false);
+        minigameCamera.enabled = false;
+
+        InputManager.Instance.AllowMoving(true);
+
+        currentState = MinigameState.idle;
+
+        BattleMessage msg = new BattleMessage("enemy_done_attacking");
+        BattleMediator.Instance.ReceiveMessage(msg);
+
+        playerObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -53,25 +85,36 @@ public class MinigameManager : MonoBehaviour
     {
         switch (currentState)
         {
-            case minigameState.idle:
+            case MinigameState.idle:
                 break;
-            case minigameState.inProgress:
-                timer -= Time.deltaTime;
-                for(int timeGate = 0; timeGate < 6; timeGate++)
-                {
-                    if(timer < (10 - (timeGate * 10.0f / 6.0f)))
-                    {
-                        if (!projectiles[timeGate].GetComponent<Rigidbody2D>().IsAwake())
-                        {
-                            projectiles[timeGate].GetComponent<Rigidbody2D>().WakeUp();
-                            projectiles[timeGate].GetComponent<Rigidbody2D>().velocity = new Vector2(0.1f, 0.2f);
+            case MinigameState.inProgress:
 
-                        }
-                    }
+                elapsedGameTime += Time.deltaTime;
+                elapsedSpawnTime += Time.deltaTime;
+
+                if(elapsedSpawnTime >= actualSpawnTime)
+                {
+                    Vector3 startPos = new Vector3(playerObject.transform.position.x + Random.Range(-0.6f, 0.6f), transform.position.y + 4.0f, transform.position.z);
+
+                    GameObject proj = Instantiate(projectileSpritePrefabs[0], startPos, Quaternion.identity);
+                    proj.GetComponent<ProjectileScript>().SetParent(this);
+                    projectiles.Add(proj);
+
+                    elapsedSpawnTime = 0.0f;
                 }
-                break;
-            case minigameState.end:
+
+                if(elapsedGameTime >= gameTime)
+                {
+                    elapsedGameTime = 0.0f;
+                    EndMinigame();
+                }
+
                 break;
         }
+    }
+
+    public void RemoveProjectile(GameObject proj)
+    {
+        projectiles.Remove(proj);
     }
 }

@@ -9,7 +9,7 @@ TagManager:
   - Fire
   - MinigameCamera
   - MinigameProjectileEnemy
-  - minigameManager
+  - MiniPlayer
   layers:
   - Default
   - TransparentFX
