@@ -16,6 +16,8 @@ public class ProjectileScript : MonoBehaviour
 
     float actualSpeed;
 
+    Vector3 dir = Vector3.down;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,7 +33,7 @@ public class ProjectileScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + Vector3.down * actualSpeed * Time.deltaTime);
+        rb.MovePosition(rb.position + dir * actualSpeed * Time.deltaTime);
         elapsedAliveTime += Time.deltaTime;
         if (elapsedAliveTime >= aliveTime)
         {
@@ -45,5 +47,15 @@ public class ProjectileScript : MonoBehaviour
     public void SetParent(MinigameManager manager)
     {
         parent = manager;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        actualSpeed = speed * Random.Range(0.7f, 1.3f);
+    }
+
+    public void SetDirection(Vector3 dir)
+    {
+        this.dir = dir.normalized;
     }
 }

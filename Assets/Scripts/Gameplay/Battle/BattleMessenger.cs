@@ -7,7 +7,7 @@ public abstract class BattleMessenger : MonoBehaviour, IBattleMessenger
 {
     public BattleStats stats;
 
-    private void Awake()
+    private void Start()
     {
         stats = GetComponent<BattleStats>();
     }
@@ -33,7 +33,7 @@ public abstract class BattleMessenger : MonoBehaviour, IBattleMessenger
                     //BattleMediator.Instance.EndBattle();
 
                     OnDeath();
-                    Destroy(gameObject);
+                    //Destroy(gameObject);
                 }
 
                 break;

@@ -11,13 +11,13 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
+        if (Instance == null) 
+        {
             Instance = this;
+            input = new PlayerInput();
+        }         
         else
-            Destroy(this);
-
-        input = new PlayerInput();
-
+            Destroy(this);     
         //input.Player.Quit.performed += _ => Application.Quit(0);
     }
 
@@ -55,12 +55,14 @@ public class InputManager : MonoBehaviour
 
     private void OnEnable()
     {
-        input.Enable();
+        if (input != null)
+            input.Enable();
     }
 
     private void OnDisable()
     {
-        input.Disable();
+        if(input != null)
+            input.Disable();
     }
 
     public void AllowMoving(bool state)

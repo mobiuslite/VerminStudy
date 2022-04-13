@@ -5,9 +5,6 @@ using UnityEngine;
 public class Enemy : BattleMessenger
 {
     Health healthBar;
-    [SerializeField]
-    ItemObject[] heldItems;
-
 
     [SerializeField]
     ItemObject[] possibleDrops;
@@ -39,7 +36,7 @@ public class Enemy : BattleMessenger
         healthBar.SetHealthScale(stats.GetHealth() / stats.GetMaxHealth());
     }
 
-    private void Awake()
+    private void Start()
     {
         healthBar = GetComponentInChildren<Health>();
         healthBar.HideHealth();
@@ -72,5 +69,6 @@ public class Enemy : BattleMessenger
 
             ItemInstantiate.Instantiate(possibleDrops[itemIndex], transform.position);
         }
+        Destroy(gameObject);
     }
 }

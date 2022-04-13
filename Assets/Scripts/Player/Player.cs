@@ -18,7 +18,7 @@ public class Player : BattleMessenger
 
     bool inBattle;
 
-    private void Awake()
+    private void Start()
     {
         playerAudio = GetComponent<AudioSource>();
         healthBar = GetComponentInChildren<Health>();
@@ -149,6 +149,6 @@ public class Player : BattleMessenger
 
     public override void OnDeath()
     {
-        SceneManager.LoadScene("Forest");
+        UIManager.Instance.ShowUI(UIType.GameOver);
     }
 }

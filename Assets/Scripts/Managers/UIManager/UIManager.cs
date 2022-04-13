@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 public enum UIType
 {
     Dialogue,
@@ -9,7 +11,8 @@ public enum UIType
     Equipment,
     Battle,
     Pause,
-    Options
+    Options,
+    GameOver
 }
 public class UIManager : MonoBehaviour
 {
@@ -21,7 +24,7 @@ public class UIManager : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         children = new List<UIChild>();
 
@@ -72,6 +75,12 @@ public class UIManager : MonoBehaviour
         {
             ShowUI(UIType.Battle);
         }
+    }
+
+    public void ReloadScene()
+    {
+        HideAllUI();
+        SceneManager.LoadScene("Forest");
     }
 
     public void Pause()

@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class MinigameManager : MonoBehaviour
 {
+    private enum AttackType
+    {
+        Normal,
+        Horizontal,
+        Both
+    }
+
     public static MinigameManager Instance { get; private set; }
 
     Camera minigameCamera;
@@ -20,6 +27,7 @@ public class MinigameManager : MonoBehaviour
     enum MinigameState { inProgress, idle }
 
     private MinigameState currentState;
+    AttackType attackType;
 
     float spawnTime = 0.6f;
     float elapsedSpawnTime = 0.0f;
@@ -44,6 +52,8 @@ public class MinigameManager : MonoBehaviour
         {
             playerObject = Instantiate(PlayerSpritePrefab, transform.position, Quaternion.identity);
             playerObject.SetActive(false);
+
+            playerObject.GetComponent<MiniPlayerScript>().SetParent(this);
         }
 
         currentState = MinigameState.idle;
@@ -63,6 +73,21 @@ public class MinigameManager : MonoBehaviour
         currentState = MinigameState.inProgress;
 
         actualSpawnTime = spawnTime * Random.Range(0.4f, 1.2f);
+
+        int randomType = Random.Range(0, 11);
+
+        if(randomType <= 3)
+        {
+            attackType = AttackType.Normal;
+        }
+        else if(randomType <= 7)
+        {
+            attackType = AttackType.Horizontal;
+        }
+        else
+        {
+            attackType = AttackType.Both;
+        }
     }
 
     void EndMinigame()
@@ -78,6 +103,13 @@ public class MinigameManager : MonoBehaviour
         BattleMediator.Instance.ReceiveMessage(msg);
 
         playerObject.SetActive(false);
+
+        foreach(GameObject obj in projectiles)
+        {
+            Destroy(obj);
+        }
+
+        projectiles.Clear();
     }
 
     // Update is called once per frame
@@ -94,11 +126,25 @@ public class MinigameManager : MonoBehaviour
 
                 if(elapsedSpawnTime >= actualSpawnTime)
                 {
-                    Vector3 startPos = new Vector3(playerObject.transform.position.x + Random.Range(-0.6f, 0.6f), transform.position.y + 4.0f, transform.position.z);
-
-                    GameObject proj = Instantiate(projectileSpritePrefabs[0], startPos, Quaternion.identity);
-                    proj.GetComponent<ProjectileScript>().SetParent(this);
-                    projectiles.Add(proj);
+                    if (attackType == AttackType.Normal)
+                    {
+                        SimpleProj();
+                    }
+                    else if (attackType == AttackType.Horizontal)
+                    {
+                        HorizontalProj();
+                    }
+                    else
+                    {
+                        if(Random.Range(0, 2) == 1)
+                        {
+                            HorizontalProj();
+                        }
+                        else
+                        {
+                            SimpleProj();
+                        }
+                    }
 
                     elapsedSpawnTime = 0.0f;
                 }
@@ -111,6 +157,31 @@ public class MinigameManager : MonoBehaviour
 
                 break;
         }
+    }
+
+    public void HorizontalProj()
+    {
+        bool startLeft = Random.Range(0, 2) == 1;
+
+        Vector3 startPos = new(transform.position.x + (startLeft ? 3.2f : -3.2f), playerObject.transform.position.y + Random.Range(-2f, 2f), transform.position.z);
+
+        GameObject proj = Instantiate(projectileSpritePrefabs[0], startPos, Quaternion.identity);
+
+        ProjectileScript projScript = proj.GetComponent<ProjectileScript>();
+        projScript.SetParent(this);
+        projScript.SetDirection(startLeft ? Vector3.left : Vector3.right);
+        projScript.SetSpeed(4f);
+
+        projectiles.Add(proj);
+    }
+
+    public void SimpleProj()
+    {
+        Vector3 startPos = new(playerObject.transform.position.x + Random.Range(-0.6f, 0.6f), transform.position.y + 4.0f, transform.position.z);
+
+        GameObject proj = Instantiate(projectileSpritePrefabs[0], startPos, Quaternion.identity);
+        proj.GetComponent<ProjectileScript>().SetParent(this);
+        projectiles.Add(proj);
     }
 
     public void RemoveProjectile(GameObject proj)
