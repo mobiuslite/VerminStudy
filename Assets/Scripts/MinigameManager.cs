@@ -52,6 +52,8 @@ public class MinigameManager : MonoBehaviour
         {
             playerObject = Instantiate(PlayerSpritePrefab, transform.position, Quaternion.identity);
             playerObject.SetActive(false);
+
+            playerObject.GetComponent<MiniPlayerScript>().SetParent(this);
         }
 
         currentState = MinigameState.idle;
