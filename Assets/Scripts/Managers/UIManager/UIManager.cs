@@ -8,19 +8,13 @@ public enum UIType
     Inventory,
     Equipment,
     Battle,
-    Minigame
+    Pause,
+    Options
 }
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
     public static bool GameIsPaused = false;
-
-
-    [SerializeField]
-    GameObject pauseMenuUI;
-
-    [SerializeField]
-    GameObject optionsMenuUI;
 
     List<UIChild> children;
     UIChild lastActiveUI;
@@ -70,24 +64,26 @@ public class UIManager : MonoBehaviour
 
     public void Resume()
     {
-        pauseMenuUI.SetActive(false);
+        HideUI();
         Time.timeScale = 1f;
         GameIsPaused = false;
 
+        if (BattleMediator.Instance.IsInBattle())
+        {
+            ShowUI(UIType.Battle);
+        }
     }
 
     public void Pause()
     {
-        pauseMenuUI.SetActive(true);
+        ShowUI(UIType.Pause);
         Time.timeScale = 0f;
         GameIsPaused = true;
     }
 
     public void OptionsMenu()
     {
-        optionsMenuUI.SetActive(true);
-        pauseMenuUI.SetActive(false);
-
+        ShowUI(UIType.Options);
     }
 
     public void QuitGame()
