@@ -23,6 +23,7 @@ public class MinigameManager : MonoBehaviour
 
     float spawnTime = 0.6f;
     float elapsedSpawnTime = 0.0f;
+    float actualSpawnTime;
 
     float gameTime = 6.0f;
     float elapsedGameTime = 0.0f;
@@ -60,6 +61,8 @@ public class MinigameManager : MonoBehaviour
         InputManager.Instance.AllowMoving(false);
 
         currentState = MinigameState.inProgress;
+
+        actualSpawnTime = spawnTime * Random.Range(0.4f, 1.2f);
     }
 
     void EndMinigame()
@@ -89,7 +92,7 @@ public class MinigameManager : MonoBehaviour
                 elapsedGameTime += Time.deltaTime;
                 elapsedSpawnTime += Time.deltaTime;
 
-                if(elapsedSpawnTime >= spawnTime)
+                if(elapsedSpawnTime >= actualSpawnTime)
                 {
                     Vector3 startPos = new Vector3(playerObject.transform.position.x + Random.Range(-0.6f, 0.6f), transform.position.y + 4.0f, transform.position.z);
 
