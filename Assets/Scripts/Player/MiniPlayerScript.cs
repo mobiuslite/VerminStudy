@@ -4,31 +4,43 @@ using UnityEngine;
 
 public class MiniPlayerScript : MonoBehaviour
 {
-
-    Vector2 input;
-    [SerializeField]
-    Rigidbody2D rb;
+    Rigidbody rb;
     [SerializeField]
     float movementSpeed = 0.2f;
+
+    bool canMove = false;
     // Start is called before the first frame update
-    void Start()
+
+    private void Awake()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        if (canMove)
+        {
+            Vector2 input;
+            input.x = Input.GetAxisRaw("Horizontal");
+            input.y = Input.GetAxisRaw("Vertical");
+            input.Normalize();
 
-        input.x = Input.GetAxis("Horizontal");
-        input.y = Input.GetAxis("Vertical");
-        input.Normalize();
-
-        rb.velocity = new Vector2(input.x * movementSpeed, input.y * movementSpeed);
+            rb.MovePosition(rb.position + new Vector3(input.x, input.y, 0.0f) * movementSpeed * Time.deltaTime);
+        }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        
+        BattleMessage msg = new BattleMessage("allies_take_damage");
+        msg.data.Add("damage", 15);
+        msg.data.Add("party_index", 0);
+
+        BattleMediator.Instance.ReceiveMessage(msg);
+    }
+
+    public void AllowMovement(bool state)
+    {
+        canMove = state;
     }
 }
