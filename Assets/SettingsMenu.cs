@@ -74,7 +74,6 @@ public class SettingsMenu : MonoBehaviour
     }
     public void BackButton()
     {
-        optionsMenuUI.SetActive(false);
-        pauseMenuUI.SetActive(true);
+        UIManager.Instance.ShowUI(UIType.Pause);
     }
 }
