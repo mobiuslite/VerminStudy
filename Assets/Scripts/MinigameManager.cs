@@ -16,6 +16,11 @@ public class MinigameManager : MonoBehaviour
     [SerializeField]
     GameObject PlayerSpritePrefab;
 
+    [SerializeField]
+    Transform spawnPosition;
+
+    UIChild UiBackground = null;
+
     enum minigameState { start, end, inProgress, idle }
 
     private minigameState currentState;
@@ -25,11 +30,12 @@ public class MinigameManager : MonoBehaviour
     {
         if(playerObject == null)
         {
-            playerObject = Instantiate(PlayerSpritePrefab);
+            playerObject = Instantiate(PlayerSpritePrefab, spawnPosition);
         }
 
+        UiBackground = GameObject.Find("MinigameBackground").GetComponent<UIChild>();
+
         currentState = minigameState.idle;
-        startMinigame();
     }
         
     public void startMinigame()
@@ -37,8 +43,8 @@ public class MinigameManager : MonoBehaviour
         timer = 10.0f;
         currentState = minigameState.inProgress;
         for (int i = 0; i < 6; i++) {
-            projectiles.Add(Instantiate(projectileSpritePrefabs[0]));
-            projectiles[i].transform.position = new Vector3(0.0f, 10.0f, 0.0f);
+            projectiles.Add(Instantiate(projectileSpritePrefabs[0], spawnPosition));
+            projectiles[i].transform.position += new Vector3(0.0f, 10.0f, 0.0f);
         }
     }
 

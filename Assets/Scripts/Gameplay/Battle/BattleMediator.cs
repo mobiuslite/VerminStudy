@@ -36,6 +36,8 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
 
     public BattleState state;
 
+    private MinigameManager minigameManager;
+
     List<IBattleMessenger> allies;
     List<IBattleMessenger> enemies;
 
@@ -59,6 +61,8 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
             Instance = this;
         else
             Destroy(this);
+
+        minigameManager = GameObject.FindGameObjectWithTag("minigameManager").GetComponent<MinigameManager>();
 
         alliesSet = false;
         enemiesSet = false;
@@ -87,13 +91,13 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
                     break;
                 case BattleState.EnemyTurn:
                     {
-                        foreach(IBattleMessenger messenger in this.enemies)
-                        {
-                            BattleMessage msg = new BattleMessage("request_action");
-                            msg.data.Add("num_party", (float)this.allies.Count);
+                        //foreach(IBattleMessenger messenger in this.enemies)
+                        //{
+                        //    BattleMessage msg = new BattleMessage("request_action");
+                        //    msg.data.Add("num_party", (float)this.allies.Count);
 
-                            messenger.ReceiveMessage(msg);
-                        }
+                        //    messenger.ReceiveMessage(msg);
+                        //}
 
                         this.state = BattleState.PlayerTurn;
                     }
