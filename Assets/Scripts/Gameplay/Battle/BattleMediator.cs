@@ -128,8 +128,8 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
 
             UIManager.Instance.ShowUI(UIType.Battle);
 
-            masterMixer.SetFloat("BattleVolume", 0.0f);
-            masterMixer.SetFloat("EnvVolume", -80.0f);
+            masterMixer.SetFloat("BattleOutput", 0.0f);
+            masterMixer.SetFloat("EnvOutput", -80.0f);
         }
     }
 
@@ -156,8 +156,8 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
 
         this.state = BattleState.End;
 
-        masterMixer.SetFloat("BattleVolume", -80.0f);
-        masterMixer.SetFloat("EnvVolume", 0.0f);
+        masterMixer.SetFloat("BattleOutput", -80.0f);
+        masterMixer.SetFloat("EnvOutput", 0.0f);
     }
 
     public void RequestAllies()
@@ -220,5 +220,10 @@ public class BattleMediator : MonoBehaviour, IBattleMessenger
                     break;
             }
         }
+    }
+
+    public bool IsInBattle()
+    {
+        return inBattle;
     }
 }
