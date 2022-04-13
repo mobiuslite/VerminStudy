@@ -5,20 +5,22 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     GameObject healthBar;
+    Renderer healthRenderer;
 
-    private void Awake()
+    private void Start()
     {
         healthBar = transform.GetChild(0).gameObject;
+        healthRenderer = healthBar.GetComponent<MeshRenderer>();
     }
 
     public void ShowHealth()
     {
-        healthBar.SetActive(true);
+        healthRenderer.enabled = true;
     }
 
     public void HideHealth()
     {
-        healthBar.SetActive(false);
+        healthRenderer.enabled = false;
     }
 
     public void SetHealthScale(float scale)
