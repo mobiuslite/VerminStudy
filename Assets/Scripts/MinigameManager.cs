@@ -21,7 +21,7 @@ public class MinigameManager : MonoBehaviour
     private minigameState currentState;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         if(playerObject == null)
         {
