@@ -7,7 +7,8 @@ public enum UIType
     FastTravel,
     Inventory,
     Equipment,
-    Battle
+    Battle,
+    Minigame
 }
 public class UIManager : MonoBehaviour
 {
